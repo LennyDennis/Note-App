@@ -6,7 +6,7 @@ import com.lennydennis.noteapp.models.Note
 class DataManager {
 
     var courses = HashMap<String, Course>()
-    var note = ArrayList<Note>()
+    var notes = ArrayList<Note>()
 
     init {
         createCourses()

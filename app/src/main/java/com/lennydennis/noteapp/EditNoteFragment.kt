@@ -30,12 +30,15 @@ class EditNoteFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val dataManager = DataManager();
+        var courseTitle = ArrayList<String>();
+        for(course in DataManager.courses.values){
+            courseTitle.add(course.title);
+        }
 
         ArrayAdapter(
             requireContext(),
             android.R.layout.simple_spinner_item,
-            dataManager.courses.values.toList(),
+            courseTitle,
         ).also { arrayAdapter ->
             arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item)
             binding.courseSpinner.adapter = arrayAdapter

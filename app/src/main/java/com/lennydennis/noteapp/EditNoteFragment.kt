@@ -12,26 +12,33 @@ import com.lennydennis.noteapp.databinding.FragmentEditNoteBinding
 class EditNoteFragment : Fragment() {
 
     private var _binding: FragmentEditNoteBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         _binding = FragmentEditNoteBinding.inflate(inflater, container, false)
+        val notePosition = arguments?.getInt(getString(R.string.note_position))
+        notePosition?.let { populateNote(it) }
         return binding.root
 
+    }
+
+    private fun populateNote(notePosition: Int) {
+        val notes = DataManager.notes
+        val note = notes[notePosition]
+        binding.etNoteTitle.setText(note.title)
+        binding.etNoteText.setText(note.text)
+        val coursePosition = DataManager.courses.values.indexOf(note.course)
+        binding.courseSpinner.setSelection(coursePosition)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         var courseTitle = ArrayList<String>();
-        for(course in DataManager.courses.values){
+        for (course in DataManager.courses.values) {
             courseTitle.add(course.title);
         }
 

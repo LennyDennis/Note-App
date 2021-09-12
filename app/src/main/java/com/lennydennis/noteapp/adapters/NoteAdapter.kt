@@ -1,6 +1,5 @@
 package com.lennydennis.noteapp.adapters
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
@@ -9,9 +8,14 @@ import com.lennydennis.noteapp.databinding.ItemNoteLayoutBinding
 import com.lennydennis.noteapp.models.Note
 
 class NoteAdapter(
-    private val noteList: List<Note>,
-    val context: Context
+    private val noteList: List<Note>
 ):RecyclerView.Adapter<NoteAdapter.NoteViewHolder>() {
+
+    lateinit var noteClickListener: NoteClickListener
+
+    interface NoteClickListener {
+        fun onNoteClicked(notePosition: Int)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -25,12 +29,15 @@ class NoteAdapter(
 
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
         val note = noteList[position]
+        holder.noteBinding.noteCard.setOnClickListener{
+            noteClickListener.onNoteClicked(position)
+        }
         holder.bind(note)
     }
 
     override fun getItemCount(): Int = noteList.size
 
-    class NoteViewHolder(noteBinding: ItemNoteLayoutBinding) :
+    inner class NoteViewHolder(val noteBinding: ItemNoteLayoutBinding) :
         RecyclerView.ViewHolder(noteBinding.root) {
         private val noteTitle: TextView = noteBinding.tvNoteTitle
         private val noteText: TextView = noteBinding.tvNoteText

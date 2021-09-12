@@ -1,10 +1,12 @@
 package com.lennydennis.noteapp
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lennydennis.noteapp.adapters.NoteAdapter
@@ -43,10 +45,17 @@ class HomeFragment : Fragment() {
     }
 
     private fun setUpRecyclerView(notes:ArrayList<Note>){
-        val noteList = notes
-        val noteListAdapter = context?.let { NoteAdapter(noteList, it) }
+        val noteListAdapter = NoteAdapter(notes)
         binding.rvNotes.layoutManager = LinearLayoutManager(context)
         binding.rvNotes.adapter = noteListAdapter
+
+        noteListAdapter.noteClickListener = object : NoteAdapter.NoteClickListener{
+            override fun onNoteClicked(notePosition: Int) {
+                val bundle = bundleOf(getString(R.string.note_position) to notePosition)
+                findNavController().navigate(R.id.action_homeFragment_to_editNoteFragment, bundle)
+            }
+
+        }
     }
 
     override fun onDestroyView() {

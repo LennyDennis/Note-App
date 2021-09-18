@@ -1,6 +1,7 @@
 package com.lennydennis.noteapp
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,19 +20,7 @@ class EditNoteFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentEditNoteBinding.inflate(inflater, container, false)
-        val notePosition = arguments?.getInt(getString(R.string.note_position))
-        notePosition?.let { populateNote(it) }
         return binding.root
-
-    }
-
-    private fun populateNote(notePosition: Int) {
-        val notes = DataManager.notes
-        val note = notes[notePosition]
-        binding.etNoteTitle.setText(note.title)
-        binding.etNoteText.setText(note.text)
-        val coursePosition = DataManager.courses.values.indexOf(note.course)
-        binding.courseSpinner.setSelection(coursePosition)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -50,6 +39,19 @@ class EditNoteFragment : Fragment() {
             arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item)
             binding.courseSpinner.adapter = arrayAdapter
         }
+
+        val notePosition = arguments?.getInt(getString(R.string.note_position))
+        notePosition?.let { populateNote(it) }
+    }
+
+    private fun populateNote(notePosition: Int) {
+        val notes = DataManager.notes
+        val note = notes[notePosition]
+        binding.etNoteTitle.setText(note.title)
+        binding.etNoteText.setText(note.text)
+
+        val coursePosition = DataManager.courses.values.indexOf(note.course)
+        binding.courseSpinner.setSelection(coursePosition)
     }
 
     override fun onDestroyView() {

@@ -2,9 +2,7 @@ package com.lennydennis.noteapp
 
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import com.lennydennis.noteapp.data.DataManager
@@ -14,12 +12,14 @@ class EditNoteFragment : Fragment() {
 
     private var _binding: FragmentEditNoteBinding? = null
     private val binding get() = _binding!!
+    private var notePosition:Int? = -1
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentEditNoteBinding.inflate(inflater, container, false)
+        setHasOptionsMenu(true);
         return binding.root
     }
 
@@ -40,18 +40,44 @@ class EditNoteFragment : Fragment() {
             binding.courseSpinner.adapter = arrayAdapter
         }
 
-        val notePosition = arguments?.getInt(getString(R.string.note_position))
-        notePosition?.let { populateNote(it) }
+        notePosition = arguments?.getInt(getString(R.string.note_position))
+        if(notePosition != -1 ){
+            notePosition?.let {
+                populateNote()
+            }
+        }
     }
 
-    private fun populateNote(notePosition: Int) {
+    private fun populateNote() {
         val notes = DataManager.notes
-        val note = notes[notePosition]
+        val note = notes[notePosition!!]
         binding.etNoteTitle.setText(note.title)
         binding.etNoteText.setText(note.text)
 
         val coursePosition = DataManager.courses.values.indexOf(note.course)
         binding.courseSpinner.setSelection(coursePosition)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_main,menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId){
+            R.id.action_next ->{
+                notePosition?.let{
+                    moveToNextNote()
+                }
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun moveToNextNote() {
+        notePosition = notePosition?.plus(1)
+        populateNote()
     }
 
     override fun onDestroyView() {

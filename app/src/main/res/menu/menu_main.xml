@@ -3,8 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.lennydennis.noteapp.MainActivity">
     <item
+        android:id="@+id/action_previous"
+        android:icon="@drawable/ic_baseline_arrow_back_ios_24"
+        android:title="Previous"
+        app:showAsAction="ifRoom|withText" />
+    <item
         android:id="@+id/action_next"
-        android:title="Next" />
+        android:icon="@drawable/ic_baseline_arrow_forward_ios_24"
+        android:title="Next"
+        app:showAsAction="ifRoom|withText" />
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"

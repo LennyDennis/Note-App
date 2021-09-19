@@ -1,11 +1,13 @@
 package com.lennydennis.noteapp
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import com.lennydennis.noteapp.data.DataManager
 import com.lennydennis.noteapp.databinding.FragmentEditNoteBinding
+import com.lennydennis.noteapp.models.Course
 
 class EditNoteFragment : Fragment() {
 
@@ -25,23 +27,39 @@ class EditNoteFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var courseTitle = ArrayList<String>();
+        val courses = ArrayList<Course>();
         for (course in DataManager.courses.values) {
-            courseTitle.add(course.title);
+            courses.add(course);
         }
 
         ArrayAdapter(
             requireContext(),
             android.R.layout.simple_spinner_item,
-            courseTitle,
+            courses,
         ).also { arrayAdapter ->
             arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item)
             binding.courseSpinner.adapter = arrayAdapter
         }
 
         notePosition = arguments?.getInt(getString(R.string.note_position))
-        notePosition?.let {
-            populateNote(it)
+        if(notePosition != null){
+            populateNote(notePosition!!)
+        }else{
+            notePosition = DataManager.notes.lastIndex
+        }
+    }
+
+    override fun onPause() {
+        saveNote()
+        super.onPause()
+    }
+
+    private fun saveNote() {
+        notePosition?.let{
+            val note = DataManager.notes[it]
+            note.title = binding.etNoteTitle.text.toString()
+            note.text = binding.etNoteText.text.toString()
+            note.course = binding.courseSpinner.selectedItem as Course
         }
     }
 

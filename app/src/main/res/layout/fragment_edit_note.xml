@@ -28,6 +28,7 @@
         android:hint="@string/title"
         android:inputType="textMultiLine"
         android:minHeight="48dp"
+        android:textColor="@color/design_default_color_error"
         app:layout_constraintEnd_toEndOf="@+id/course_spinner"
         app:layout_constraintStart_toStartOf="@+id/course_spinner"
         app:layout_constraintTop_toBottomOf="@+id/course_spinner" />

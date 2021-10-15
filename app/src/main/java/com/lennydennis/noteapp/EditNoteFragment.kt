@@ -1,13 +1,14 @@
 package com.lennydennis.noteapp
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import com.lennydennis.noteapp.data.DataManager
 import com.lennydennis.noteapp.databinding.FragmentEditNoteBinding
 import com.lennydennis.noteapp.models.Course
+import com.lennydennis.noteapp.models.DEFAULT_NOTE_POSITION
+import com.lennydennis.noteapp.models.NOTE_POSITION
 
 class EditNoteFragment : Fragment() {
 
@@ -41,8 +42,10 @@ class EditNoteFragment : Fragment() {
             binding.courseSpinner.adapter = arrayAdapter
         }
 
-        notePosition = arguments?.getInt(getString(R.string.note_position))
-        if(notePosition != null){
+        notePosition = savedInstanceState?.getInt(NOTE_POSITION,DEFAULT_NOTE_POSITION)?:
+            arguments?.getInt(getString(R.string.note_position))
+
+        if(notePosition != null || notePosition != DEFAULT_NOTE_POSITION ){
             populateNote(notePosition!!)
         }else{
             notePosition = DataManager.notes.lastIndex
@@ -114,6 +117,13 @@ class EditNoteFragment : Fragment() {
             }
         }
         super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        notePosition?.let {
+            outState.putInt(NOTE_POSITION, it)
+        }
     }
 
     override fun onDestroyView() {

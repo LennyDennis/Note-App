@@ -45,12 +45,13 @@ class EditNoteFragment : Fragment() {
         notePosition = savedInstanceState?.getInt(NOTE_POSITION,DEFAULT_NOTE_POSITION)?:
             arguments?.getInt(getString(R.string.note_position))
 
-        if(notePosition != null || notePosition != DEFAULT_NOTE_POSITION ){
+        if(notePosition != null && notePosition != DEFAULT_NOTE_POSITION ){
             populateNote(notePosition!!)
         }else{
             notePosition = DataManager.notes.lastIndex
         }
     }
+
 
     override fun onPause() {
         saveNote()

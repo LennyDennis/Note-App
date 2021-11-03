@@ -24,7 +24,7 @@ object DataManager {
         createNotes()
     }
 
-    fun createNotes() {
+    private fun createNotes() {
         for ((index, value) in courses.values.withIndex()) {
             var note = Note(value, "Note ${notes.size + 1}", "This is the first note A$index")
             notes.add(note)
